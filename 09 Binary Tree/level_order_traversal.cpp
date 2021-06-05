@@ -41,46 +41,42 @@ Expected Output
 7
 */
 
-void levelOrderPrint(node*root){
 
-	queue<node*> q;
-	q.push(root);
-	q.push(NULL);
+void printLevelOrder(Node* root)  
+{  
+    queue<Node*> q;
+    q.push(root);
+    q.push(NULL);
+    
+    while(q.size()!=0){
+        Node* temp = q.front();
+        if(temp==NULL){
+            cout<<endl;
+            q.pop();
+            //check if it is not the last NULL , i.e still elements are there in queue to be proccessed.
+            if(q.size()!=0){
+                q.push(NULL);
+            }
+        }
+        else{
+            //Pop the present element and push its children to the queue.
+            q.pop();
+            cout << temp->data << " ";
+            if(temp->left!=NULL){
+                q.push(temp->left);
+            }
+            if(temp->right!=NULL){
+                q.push(temp->right);
+            }
+            
+        }
+    }
 
-	while(!q.empty()){
-		node* temp = q.front();
-		if(temp==NULL){
-			cout<<endl;
-			q.pop();
-			//insert a new null for the next level
-			if(!q.empty()){
-				q.push(NULL);
-			}
-		}
-		else{
-			q.pop();
-			cout<<temp->data<<" ";
-
-			if(temp->left){
-				q.push(temp->left);
-			}
-			if(temp->right){
-				q.push(temp->right);
-			}
-		}
-
-	}
-	return;
-}
-
-
+}  
 
 
 int main(){
-	
 	node* root = buildTree();
-	levelOrderPrint(root);
-
-
+	printlevelOrder(root);
 	return 0;
 }
