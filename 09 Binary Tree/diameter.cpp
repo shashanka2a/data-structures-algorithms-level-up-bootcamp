@@ -1,142 +1,106 @@
-#include<iostream>
-#include<queue>
-using namespace std;
+/* 
+Given an array of unique elements, construct a Binary Search Tree and find the diameter of the tree. Diameter is defined as the number of nodes on the longest path between 2 nodes of the tree.
 
-class node{
+Input Format
 
-public:
-	int data;
-	node*left;
-	node*right;
-	
-	node(int d){
-		data = d;
-		left = NULL;
-		right = NULL;
-	}
-};
+First line of input contains T - number of test cases. Its followed by 2T lines. First line of each test case contains N - number of nodes in the BST. The next line contains N unique integers - value of the nodes.
 
-//Input : 1 2 4 -1 -1 5 7 -1 -1 -1 3 -1 6 -1 -1
-node* buildTree(){
+Constraints
 
-	int d;
-	cin>>d;
+1 <= T <= 1000
+1 <= N <= 5000
+0 <= ar[i] <= 10000
 
-	if(d==-1){
-		return NULL;
-	}
 
-	node* n = new node(d);
-	n->left = buildTree();
-	n->right = buildTree();
+Sample Input 
 
-	return n;
-}
-/* Todo: Implement Level Order Traversal
-Expected Output
-
-1
-2 3
-4 5 6
+3
+5
+1 2 3 4 5 
+5
+2 4 3 1 5 
 7
+4 5 15 0 1 7 17 
+
+Sample Output 
+
+5
+4
+6
+
 */
 
-void levelOrderPrint(node*root){
 
-	queue<node*> q;
-	q.push(root);
-	q.push(NULL);
 
-	while(!q.empty()){
-		node* temp = q.front();
-		if(temp==NULL){
-			cout<<endl;
-			q.pop();
-			//insert a new null for the next level
-			if(!q.empty()){
-				q.push(NULL);
-			}
-		}
-		else{
-			q.pop();
-			cout<<temp->data<<" ";
 
-			if(temp->left){
-				q.push(temp->left);
-			}
-			if(temp->right){
-				q.push(temp->right);
-			}
-		}
 
-	}
-	return;
-}
-//Helper Function : Height of the Tree
-int height(node*root){
-	if(root==NULL){
-		return 0;
-	}	
-	int h1 = height(root->left);
-	int h2 = height(root->right);
-	return 1 + max(h1,h2);
-}
-
-// Diameter
-// Time Complexity?
-int diameter(node*root){
-	//base case 
-	if(root==NULL){
-		return 0;
-	}
-
-	//rec case
-	int D1 = height(root->left) + height(root->right);
-	int D2 = diameter(root->left);
-	int D3 = diameter(root->right);
-
-	return max(D1,max(D2,D3));
-}
-
-//---------Diameter Optimised
-class HDPair{
-public:
-	int height;
-	int diameter;
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+class Node {
+    public:
+    int data;
+    Node *left;
+    Node *right;
+    Node(int d) {
+        data = d;
+        left = NULL;
+        right = NULL;
+    }
 };
 
-HDPair optDiameter(node*root){
-	HDPair p;
+Node* insert(Node* h,int k){
+    if(h==NULL) 
+        return new Node(k);
+    if(h->data<k) 
+        h->right= insert(h->right,k);
+    else 
+        h->left=insert(h->left,k);
+    return h;
+} 
 
-	if(root==NULL){
-		p.height = p.diameter = 0;
-		return p;
-	}
+int height(Node* root){
+    if(root==NULL)
+        return 0;
+    return 1+max(height(root->left),height(root->right));
+}
 
-	//otherwise
-	HDPair Left = optDiameter(root->left);
-	HDPair Right = optDiameter(root->right);
+// Max of Left Subtree Diameter || Left Subtree + Root + Right Subtree Diameter || Right Subtree Diameter
 
-	p.height = max(Left.height,Right.height) + 1;
+// Diameter -> no of edges                                Height -> no of node
 
-	int D1 = Left.height + Right.height;
-	int D2 = Left.diameter;
-	int D3 = Right.diameter;
+// d1 = h1-1                    d2 = h2 - 1               D = d1 + d2 + 2 (root edges)
 
-	p.diameter = max(D1,max(D2,D3));
-	return p;
+// O ( N ^ 2 ) calling height function recursively leads to multiple calls for single computattion.
+
+int diameter(Node* root){
+    if(root==NULL){
+        return 0;
+    }
+    int D1 = height(root->left) + height(root->right);
+    int D2 = diameter(root->left);
+    int D3 = diameter(root->right);
+    
+    return max(D1,max(D2,D3));
 }
 
 
 
-int main(){
-	
-	node* root = buildTree();
-	levelOrderPrint(root);
-	cout << "Diameter is "<<diameter(root) <<endl;
-
-	cout <<" Opt Diameter is " << optDiameter(root).diameter <<endl;
-
-
-	return 0;
+int main() {
+    int t;
+    cin>>t;
+    while(t--){
+        int n,x;
+        cin>>n;
+        Node* root=NULL;
+        for(int i=0;i<n;i++){
+            cin>>x;
+            root=insert(root,x);
+        }
+        cout<< 1 + diameter(root) <<endl;
+    }
+    return 0;
 }
