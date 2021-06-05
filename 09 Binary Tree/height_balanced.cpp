@@ -1,120 +1,44 @@
-#include<iostream>
-#include<queue>
-#include<vector>
-using namespace std;
+// https://leetcode.com/problems/balanced-binary-tree/
 
-class node{
+/*
+Given a binary tree, determine if it is height-balanced.
 
+For this problem, a height-balanced binary tree is defined as:
+
+a binary tree in which the left and right subtrees of every node differ in height by no more than 1.
+
+
+Input: root = [3,9,20,null,null,15,7]
+Output: true
+
+Input: root = [1,2,2,3,3,null,null,4,4]
+Output: false
+
+*/
+
+
+class Solution {
 public:
-	int data;
-	node*left;
-	node*right;
 	
-	node(int d){
-		data = d;
-		left = NULL;
-		right = NULL;
-	}
+    bool isBalanced(TreeNode* root) {
+        pair <int,bool> p;
+        p = BalancedHelper(root);
+        return p.second;
+    }
+    // Post Order Approach -> Building answer in Bottum-Up Fashion : Optimising by removing height function and passing as pair value
+    // For a Tree to be Height Balanced , left should return true and also right.
+    pair<int,bool> BalancedHelper(TreeNode* root){
+        pair <int,bool> l,r;
+        if(root==NULL){
+            return make_pair(0,true);
+        }
+        l = BalancedHelper(root->left);
+        r = BalancedHelper(root->right);
+        int height = 1 + max(l.first,r.first);
+        if(abs(l.first-r.first)<=1 && l.second && r.second){
+           return make_pair(height,true);
+        }
+        return make_pair(height,false);
+    }
+	
 };
-
-//Input : 1 2 4 -1 -1 5 7 -1 -1 -1 3 -1 6 -1 -1
-node* buildTree(){
-
-	int d;
-	cin>>d;
-
-	if(d==-1){
-		return NULL;
-	}
-
-	node* n = new node(d);
-	n->left = buildTree();
-	n->right = buildTree();
-
-	return n;
-}
-
-void levelOrderPrint(node*root){
-
-	queue<node*> q;
-	q.push(root);
-	q.push(NULL);
-
-	while(!q.empty()){
-		node* temp = q.front();
-		if(temp==NULL){
-			cout<<endl;
-			q.pop();
-			//insert a new null for the next level
-			if(!q.empty()){
-				q.push(NULL);
-			}
-		}
-		else{
-			q.pop();
-			cout<<temp->data<<" ";
-
-			if(temp->left){
-				q.push(temp->left);
-			}
-			if(temp->right){
-				q.push(temp->right);
-			}
-		}
-
-	}
-	return;
-}
-//===============================
-//ToDo:  Complete this Function |
-//===============================
-
-// O(N) time
-pair<int,bool> isHeightBalanced(node *root){
-
-	pair<int,bool> p, Left, Right;
-
-	if(root==NULL){
-		p.first = 0; //height
-		p.second = true; // balanced
-		return p;
-	}
-
-	//rec case (Postorder Traversal)
-	Left = isHeightBalanced(root->left);
-	Right = isHeightBalanced(root->right);
-
-	int height = max(Left.first, Right.first) + 1;
-
-	if(abs(Left.first - Right.first)<=1 and Left.second and Right.second){
-			return make_pair(height,true);
-	}
-	return make_pair(height,false);
-}
-
-
-
-int main(){
-	
-	node* root = new node(1);
-	root->left = new node(2);
-	root->right = new node(3);
-	root->left->left = new node(4);
-	root->left->right = new node(5);
-	root->right->right = new node(6);
-	root->left->right->left = new node(7);
-	root->left->right->right = new node(8);
-	//root->left->right->right->left = new node(9);
-	//root->left->right->right->right = new node(10);
-	
-	pair<int,bool> p = isHeightBalanced(root);
-	if(p.second){
-		cout << "Yes, its height balanced";
-	}
-	else{
-		cout << "Not a height balanced tree";
-	}
-
-
-	return 0;
-}
