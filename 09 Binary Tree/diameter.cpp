@@ -1,4 +1,7 @@
-/* 
+// https://www.hackerrank.com/contests/smart-interviews/challenges/si-diameter-of-a-tree/problem
+
+/*
+
 Given an array of unique elements, construct a Binary Search Tree and find the diameter of the tree. Diameter is defined as the number of nodes on the longest path between 2 nodes of the tree.
 
 Input Format
@@ -32,14 +35,13 @@ Sample Output
 
 
 
-
-
 #include <cmath>
 #include <cstdio>
 #include <vector>
 #include <iostream>
 #include <algorithm>
 using namespace std;
+
 class Node {
     public:
     int data;
@@ -86,8 +88,6 @@ int diameter(Node* root){
     
     return max(D1,max(D2,D3));
 }
-
-
 
 int main() {
     int t;
