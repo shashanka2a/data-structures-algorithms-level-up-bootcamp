@@ -41,7 +41,7 @@ class Solution
 {
     public:
     //Function to find the least absolute difference between any node
-	//value of the BST and the given integer.
+    //value of the BST and the given integer.
     int minDiff(Node *root, int K)
     {
         //Your code here
