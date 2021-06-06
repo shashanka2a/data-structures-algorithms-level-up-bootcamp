@@ -1,105 +1,67 @@
-//BST to Linked List
-#include <iostream>
-using namespace std;
+// https://practice.geeksforgeeks.org/problems/inorder-successor-in-bst/1#
 
-class Node
-{
-  public:
-   int key;
-   Node *left;
-   Node *right;
-
-   Node(int key){
-       this->key = key;
-       left = right  = NULL;
-   }
-};
-
-Node* insert(Node * root, int key){
-	if(root==NULL){
-		return new Node(key);
-	}
-
-	//rec case 
-	if(key < root->key){
-		root->left = insert(root->left,key);
-	}
-	else{
-		root->right = insert(root->right,key);
-	}
-	return root;
-
-}
-
-
-
-void printInOrder(Node *root){
-	if(root==NULL){
-		return;
-	}
-	//left, root, right
-	printInOrder(root->left);
-	cout << root-> key <<" ,";
-	printInOrder(root->right);
-}
-
-
-//---------Next Inorder Successor
-
-Node * inorderSucc(Node * root, Node * target){
-
-	// If Right Subtree 
-	if(target->right!=NULL){
-		Node* temp = target->right;
-		while(temp->left!=NULL){
-			temp = temp->left;
-		}
-		return temp;
-	}
-
-
-	// Otherwise 
-	Node * temp = root;
-	Node * succ = NULL;
-
-	while (temp!=NULL){
-
-		if(temp->key > target->key){
-			succ = temp;
-			temp = temp->left;
-		}
-		else if(temp->key < target->key ){
-			temp = temp->right;
-		}
-		else{
-			break;
-		}
-	}
-	return succ;
-}
-
-
-int main(){
-
-	Node * root = NULL;
-	root = insert(root,8);
-	root = insert(root,3);
-	root = insert(root,10);
-	root = insert(root,1);
-	root = insert(root,6);
-	root = insert(root,14);
-	root = insert(root,4);
-	root = insert(root,7);
-	root = insert(root,13);
-
-	//Test our Code
-	Node* t1 = root->left->right->right;
-	Node* t2 = root->right;
-
-	cout<<"Inorder succ of 7 is" << inorderSucc(root,t1)->key <<endl;
-	cout<<"Inorder succ of 10 is" << inorderSucc(root,t2)->key <<endl;
+/*
+Given a BST, and a reference to a Node x in the BST. Find the Inorder Successor of the given node in the BST.
  
 
+Example 1:
 
-	return 0;
-}
+Input:
+      2
+    /   \
+   1     3
+K(data of x) = 2
+Output: 3 
+Explanation: 
+Inorder traversal : 1 2 3 
+Hence, inorder successor of 2 is 3.
+
+Example 2:
+
+Input:
+             20
+            /   \
+           8     22
+          / \
+         4   12
+            /  \
+           10   14
+K(data of x) = 8
+Output: 10
+Explanation:
+Inorder traversal: 4 8 10 12 14 20 22
+Hence, successor of 8 is 10.
+*/
+
+class Solution{
+  public:
+    // returns the inorder successor of the Node x in BST (rooted at 'root')
+    Node * inOrderSuccessor(Node *root, Node *x)
+    {
+        
+        if(x->right!=NULL){
+            Node* temp = x->right;
+            while(temp->left!=NULL){
+                temp = temp->left;
+            }
+            return temp;
+        }
+
+        Node* temp = root;
+        Node* ans = NULL;
+        while(temp!=NULL){
+            if(temp->data  > x->data){
+                ans = temp;
+                temp = temp->left;
+            }
+            else if(temp->data  < x->data){
+                temp = temp->right;
+            }
+            else{
+                break;
+            }
+        }
+        return ans;
+    }
+
+};
