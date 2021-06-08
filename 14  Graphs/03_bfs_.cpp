@@ -1,72 +1,36 @@
-#include<iostream>
-#include<list>
-#include<queue>
-using namespace std;
+/*
+Given a directed graph. The task is to do Breadth First Traversal of this graph starting from 0.
+Note: One can move from node u to node v only if there's an edge from u to v and find the BFS traversal of the graph starting from the 0th vertex,
+from left to right according to the graph. 
+Also, you should only take nodes directly or indirectly connected from Node 0 in consideration.
+*/
+class Solution
+{
 
+    public:
+	//Function to return Breadth First Traversal of given graph.
+	vector<int>bfsOfGraph(int V, vector<int> adj[])
+	{
+        vector<int> nodes;
+        vector<int> vis(V,0);
 
-class Graph{
-
-	int V;
-	list<int> *l;
-
-public:
-	Graph(int v){
-		V = v;
-		l = new list<int>[V];
-	}
-
-	void addEdge(int i,int j,bool undir=true){
-		l[i].push_back(j);
-		if(undir){
-			l[j].push_back(i);
-		}
-	}
-	void bfs(int source){
-
-		queue<int> q;
-		bool *visited = new bool[V]{0};
-
-		q.push(source);
-		visited[source] = true;
-
-		while(!q.empty()){
-			//Do some work for every node
-			int f = q.front();
-			cout<<f <<endl;
-			q.pop();
-
-			//PUsh the nbrs of current node inside q if they are not already visited
-			for(auto nbr : l[f]){
-				if(!visited[nbr]){
-					q.push(nbr);
-					visited[nbr] = true;
-				}
-			}
-		}
-	}
-	
-	
-
-};
-
-int main(){
-	Graph g(7);
-	g.addEdge(0,1);
-	g.addEdge(1,2);
-	g.addEdge(2,3);
-	g.addEdge(3,5);
-	g.addEdge(5,6);
-	g.addEdge(4,5);
-	g.addEdge(0,4);
-	g.addEdge(3,4);
-	g.bfs(1);
-	return 0;
+        queue <int> q;
+        q.push(0);
+        vis[0] = 1;
+        
+        while(!q.empty()){
+            int curr = q.front();
+            q.pop();
+            nodes.push_back(curr);
+            
+            for(auto s: adj[curr]){
+                if(vis[s]!=1){
+                    q.push(s);
+                    vis[s] = 1;
+                }
+            }
+            
+        }
+            
+        return nodes;
 }
-
-
-
-
-
-
-
-
