@@ -7,15 +7,14 @@ Note: Use recursive approach to find the DFS traversal of the graph starting fro
 class Solution
 {
 	void dfs(int node, vector<int> adj[],vector<int> &vis,vector<int> &nodes){
-        nodes.push_back(node);
-        //cout<< node<<" ";
-        vis[node] = 1;
-        
-        for (auto i:adj[node]){
-            if (!vis[i]) {
-                dfs(i, adj, vis, nodes); 
-            }
-        }
+		nodes.push_back(node);
+		vis[node] = 1;
+
+		for (auto i:adj[node]){
+		    if (!vis[i]) {
+			dfs(i, adj, vis, nodes); 
+		    }
+		}
     }
 
    public:
@@ -23,7 +22,7 @@ class Solution
    	vector<int>dfsOfGraph(int V, vector<int> adj[])
 	{
 	    vector<int> nodes;
-        vector<int> vis(V,0);
+            vector<int> vis(V,0);
 	    for(int i=0;i<V;i++){
 	        if(vis[i]==0){
 	            dfs(i,adj,vis,nodes);
