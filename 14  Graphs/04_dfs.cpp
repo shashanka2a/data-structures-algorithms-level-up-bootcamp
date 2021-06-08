@@ -1,36 +1,34 @@
-#include<iostream>
-#include<list>
-#include<queue>
-using namespace std;
+// https://practice.geeksforgeeks.org/problems/depth-first-traversal-for-a-graph/1#
+/*
+Given a connected undirected graph. Perform a Depth First Traversal of the graph.
+Note: Use recursive approach to find the DFS traversal of the graph starting from the 0th vertex from left to right according to the graph.
+*/
 
-vector<int> nodes;
+class Solution
+{
+	void dfs(int node, vector<int> adj[],vector<int> &vis,vector<int> &nodes){
+        nodes.push_back(node);
+        //cout<< node<<" ";
+        vis[node] = 1;
+        
+        for (auto i:adj[node]){
+            if (!vis[i]) {
+                dfs(i, adj, vis, nodes); 
+            }
+        }
+    }
 
-void DFS(vector<vector<int>> &alist,int node,vector<int> &vis){
-    vis[node] = 1; 
-    nodes.push_back(node);
-    for (auto i = alist[node].begin(); i != alist[node].end(); i++) 
-        if (!vis[*i]) 
-            DFS(alist,*i, vis); 
-}
-
-int main(){
-	int V,E;
-	scanf("%d%d",&V,&E);
-	vector<vector<int>> alist(V+1);
-	for(int i=0;i<E;i++){
-	    int u,v;
-	    scanf("%d%d",&u,&v);
-	    alist[u].push_back(v);
-	    alist[v].push_back(u);
-	}
-	vector<int> vis(V+1,0);
-	for(int i=1;i<=V;i++)
-	    if(vis[i]!=1){
-		DFS(alist,i,vis);
+   public:
+   	//Function to return a list containing the DFS traversal of the graph.
+   	vector<int>dfsOfGraph(int V, vector<int> adj[])
+	{
+	    vector<int> nodes;
+        vector<int> vis(V,0);
+	    for(int i=0;i<V;i++){
+	        if(vis[i]==0){
+	            dfs(i,adj,vis,nodes);
+	        }
 	    }
-	for(auto i = nodes.begin(); i != nodes.end(); i++){
-	    cout<<*i<<" ";
+	    return nodes;
 	}
-	cout<<endl;
-
-}
+};
